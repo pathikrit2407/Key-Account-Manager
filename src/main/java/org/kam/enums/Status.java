@@ -3,8 +3,9 @@ package org.kam.enums;
 public enum Status {
 
     TODO,
-    INPROGRESS,
+    IN_PROGRESS,
     DELAY,
     CANCEL,
-    DONE
+    DONE,
+    HOLD;
 }

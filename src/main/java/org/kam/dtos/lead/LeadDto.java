@@ -1,6 +1,5 @@
 package org.kam.dtos.lead;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.kam.dtos.CallDto;
 import org.kam.enums.Domain;

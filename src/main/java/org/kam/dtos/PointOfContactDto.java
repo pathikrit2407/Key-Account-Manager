@@ -9,4 +9,5 @@ public class PointOfContactDto {
     private String designation;
     private String email;
     private String phoneNumber;
+    private Integer leadId;
 }
