@@ -7,13 +7,14 @@ import org.kam.req.RestaurantReqBody;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class RestaurantMapper {
 
     public RestaurantDto toRestaurantDto(RestaurantReqBody reqBody) {
         RestaurantDto restaurantDto = new RestaurantDto();
-        restaurantDto.setId(1); //TODO: Add via next val service
+        restaurantDto.setId(UUID.randomUUID().toString());
         restaurantDto.setName(reqBody.getName());
         restaurantDto.setAddress(reqBody.getAddress());
         restaurantDto.setEmail(reqBody.getEmail());
@@ -30,7 +31,7 @@ public class RestaurantMapper {
 
     private PointOfContactDto toPointOfContactDto(RestaurantReqBody.PointOfContactReqBody reqBody, LeadDto leadDto) {
         PointOfContactDto dto = new PointOfContactDto();
-        dto.setId(1); //TODO: Add via next val service
+        dto.setId(UUID.randomUUID().toString());
         dto.setName(reqBody.getName());
         dto.setEmail(reqBody.getEmail());
         dto.setPhoneNumber(reqBody.getPhoneNumber());

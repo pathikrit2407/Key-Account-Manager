@@ -15,13 +15,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class LeadManagerService {
 
-    //TODO: Create Next Value Service for MongoDB
+    private final Logger logger = LoggerFactory.getLogger(LeadManagerService.class);
 
-    private Logger logger = LoggerFactory.getLogger(LeadManagerService.class);
     private final RestaurantMapper mapper;
     private final MongoWrapperService<RestaurantDto> restaurantMongoWrapperService;
     private final MongoWrapperService<PointOfContactDto> pocMongoWrapperService;
@@ -58,7 +58,7 @@ public class LeadManagerService {
 
     private RestaurantLeadDto getLeadForRestaurant(RestaurantDto restaurantDto) {
         RestaurantLeadDto lead = new RestaurantLeadDto();
-        lead.setId(11);//TODO: Add via next val service
+        lead.setId(UUID.randomUUID().toString());
         lead.setRestaurantId(restaurantDto.getId());
         lead.setCalls(List.of());
         lead.setDomain(Domain.FOOD);

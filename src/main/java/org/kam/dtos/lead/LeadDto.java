@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class LeadDto {
-    private Integer id;
+    private String id;
     private Domain domain;
     private Status status;
     private List<CallDto> calls;

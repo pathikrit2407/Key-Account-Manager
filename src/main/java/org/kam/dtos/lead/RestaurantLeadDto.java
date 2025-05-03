@@ -6,5 +6,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class RestaurantLeadDto extends LeadDto {
-    private Integer restaurantId;
+    private String restaurantId;
 }
