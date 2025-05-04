@@ -1,8 +1,11 @@
 package org.kam.services;
 
+import com.mongodb.client.model.Filters;
+import org.bson.conversions.Bson;
 import org.kam.db.MongoWrapperService;
 import org.kam.dtos.PointOfContactDto;
 import org.kam.dtos.domain.RestaurantDto;
+import org.kam.dtos.lead.LeadDto;
 import org.kam.dtos.lead.RestaurantLeadDto;
 import org.kam.enums.Domain;
 import org.kam.enums.Status;
@@ -15,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -54,6 +58,35 @@ public class LeadManagerService {
         }
 
         return commonResponse;
+    }
+
+    public CommonResponse<RestaurantLeadDto> getLeadStatus(String leadId) {
+
+        CommonResponse<RestaurantLeadDto> commonResponse = new CommonResponse<>();
+
+        try {
+            Optional<RestaurantLeadDto> restaurantLeadDto = leadMongoWrapperService.find(Constants.LEADS, filterForFetchingLead(leadId),
+                    RestaurantLeadDto.class);
+
+            if (restaurantLeadDto.isPresent()) {
+                commonResponse.setData(List.of(restaurantLeadDto.get()));
+            } else {
+                commonResponse.setSuccessfulEvent(false);
+            }
+
+            logger.info("Info fetched with lead id {} : {}", leadId, commonResponse.getData());
+        } catch (Exception e) {
+            commonResponse.setSuccessfulEvent(false);
+            logger.error("Error occurred : ", e);
+        }
+
+        return commonResponse;
+    }
+
+    private Bson filterForFetchingLead(String leadId) {
+        return Filters.and(
+                Filters.eq("_id", leadId)
+        );
     }
 
     private RestaurantLeadDto getLeadForRestaurant(RestaurantDto restaurantDto) {

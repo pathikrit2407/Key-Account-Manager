@@ -31,9 +31,18 @@ A Key Account Manager (KAM) is someone responsible for managing and growing rela
 - Monitor ordering patterns and frequency
 - Identify underperforming accounts
 
-## DTOs
-
 ## APIs
+
+### Lead Management
+
+Adding new Restaurant, Lead and Multiple Point of Contacts.
+```
+/api/restaurant_lead (POST) 
+```
+Returns the Status of Restaurant Lead.
+```
+/api/lead_status?id={id} (GET)
+```
 
 ## Services
 
