@@ -32,7 +32,14 @@ public class MongoWrapperService<T> {
     }
 
     public Optional<T> find(String collectionName, Bson filter, Class<T> clazz) {
-        FindIterable<T> findIterable = getCollection(collectionName, clazz).find(filter);
-        return Optional.ofNullable(findIterable.first());
+        FindIterable<T> iterable = getCollection(collectionName, clazz).find(filter);
+        return Optional.ofNullable(iterable.first());
+    }
+
+    public List<T> findAll(String collectionName, Bson filter, Class<T> clazz) {
+        FindIterable<T> iterables = getCollection(collectionName, clazz).find(filter);
+        List<T> data = new ArrayList<>();
+        iterables.iterator().forEachRemaining(data::add);
+        return data;
     }
 }
