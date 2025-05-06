@@ -5,7 +5,6 @@ import org.bson.conversions.Bson;
 import org.kam.db.MongoWrapperService;
 import org.kam.dtos.PointOfContactDto;
 import org.kam.dtos.domain.RestaurantDto;
-import org.kam.dtos.lead.LeadDto;
 import org.kam.dtos.lead.RestaurantLeadDto;
 import org.kam.enums.Domain;
 import org.kam.enums.Status;
@@ -29,14 +28,13 @@ public class LeadManagerService {
     private final RestaurantMapper mapper;
     private final MongoWrapperService<RestaurantDto> restaurantMongoWrapperService;
     private final MongoWrapperService<PointOfContactDto> pocMongoWrapperService;
-    private final MongoWrapperService<RestaurantLeadDto> leadMongoWrapperService;
+    private final MongoWrapperService<RestaurantLeadDto> restaurantLeadMongoWrapperService;
 
-    public LeadManagerService(RestaurantMapper mapper, MongoWrapperService<RestaurantDto> restaurantMongoWrapperService,
-                              MongoWrapperService<PointOfContactDto> pocMongoWrapperService, MongoWrapperService<RestaurantLeadDto> leadMongoWrapperService) {
+    public LeadManagerService(RestaurantMapper mapper) {
         this.mapper = mapper;
-        this.restaurantMongoWrapperService = restaurantMongoWrapperService;
-        this.pocMongoWrapperService = pocMongoWrapperService;
-        this.leadMongoWrapperService = leadMongoWrapperService;
+        this.restaurantMongoWrapperService = new MongoWrapperService<>(RestaurantDto.class);
+        this.pocMongoWrapperService = new MongoWrapperService<>(PointOfContactDto.class);
+        this.restaurantLeadMongoWrapperService = new MongoWrapperService<>(RestaurantLeadDto.class);
     }
 
     public CommonResponse postRestaurantLead(RestaurantReqBody restaurantReqBody) {
@@ -46,10 +44,10 @@ public class LeadManagerService {
             RestaurantLeadDto leadDto = getLeadForRestaurant(restaurantDto);
             List<PointOfContactDto> pocDto = mapper.toPointOfContactDtos(restaurantReqBody, leadDto);
 
-            //TODO: Push data into restaurant_db, poc_db, lead_db
-            restaurantMongoWrapperService.insertOne(Constants.RESTAURANTS, restaurantDto, RestaurantDto.class);
-            pocMongoWrapperService.insertMany(Constants.POCS, pocDto, PointOfContactDto.class);
-            leadMongoWrapperService.insertOne(Constants.LEADS, leadDto, RestaurantLeadDto.class);
+            //Push data into restaurant_db, poc_db, lead_db
+            restaurantMongoWrapperService.insertOne(Constants.RESTAURANTS, restaurantDto);
+            pocMongoWrapperService.insertMany(Constants.POCS, pocDto);
+            restaurantLeadMongoWrapperService.insertOne(Constants.LEADS, leadDto);
 
             logger.info("Lead Id : {}, Restaurant id: {}", leadDto.getId(), restaurantDto.getId());
         } catch (Exception e) {
@@ -65,8 +63,7 @@ public class LeadManagerService {
         CommonResponse<RestaurantLeadDto> commonResponse = new CommonResponse<>();
 
         try {
-            Optional<RestaurantLeadDto> restaurantLeadDto = leadMongoWrapperService.find(Constants.LEADS, filterForFetchingLead(leadId),
-                    RestaurantLeadDto.class);
+            Optional<RestaurantLeadDto> restaurantLeadDto = restaurantLeadMongoWrapperService.find(Constants.LEADS, filterForFetchingLead(leadId));
 
             if (restaurantLeadDto.isPresent()) {
                 commonResponse.setData(List.of(restaurantLeadDto.get()));
